@@ -35,8 +35,8 @@ This is a simple URL shortening service built with Java, Spring Boot, and Maven.
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/url-shortener.git
-   cd url-shortener
+   git clone https://github.com/rcc-castillo/UrlShortener.git
+   cd UrlShortener
    ```
    
 2. **Build the project:**
