@@ -5,7 +5,7 @@ import com.roadmapsh.urlshortener.persistence.model.Url;
 
 import java.util.Optional;
 
-public interface UrlService {
+public interface UrlShortenerService {
     Url createShortUrl(String originalUrl);
     Optional<Url> getOriginalUrl(String shortUrl);
 

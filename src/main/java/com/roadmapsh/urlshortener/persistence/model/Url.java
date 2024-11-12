@@ -22,7 +22,7 @@ public class Url {
     private Long id;
 
     @Column(nullable = false)
-    @Pattern(regexp = "^(https?)://[^\\s/$.?#].[^\\s]*$",message = "URL must be valid and start with http or https.")
+    //@Pattern(regexp = "^(https?)://[^\\s/$.?#].[^\\s]*$",message = "URL must be valid and start with http or https.")
     private String url;
 
     @Column(unique = true, nullable = false)

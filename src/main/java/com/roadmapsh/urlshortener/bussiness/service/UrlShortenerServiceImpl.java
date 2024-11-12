@@ -1,6 +1,8 @@
 package com.roadmapsh.urlshortener.bussiness.service;
 
 import com.roadmapsh.urlshortener.common.dto.UrlStatsDTO;
+import com.roadmapsh.urlshortener.common.exceptions.InvalidUrlException;
+import com.roadmapsh.urlshortener.common.exceptions.UrlAlreadyExistsException;
 import com.roadmapsh.urlshortener.common.utils.UrlShortener;
 import com.roadmapsh.urlshortener.common.utils.UrlValidator;
 import com.roadmapsh.urlshortener.persistence.model.Url;
@@ -13,19 +15,20 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class UrlServiceImpl implements UrlService {
+public class UrlShortenerServiceImpl implements UrlShortenerService {
 
     private final UrlRepository urlRepository;
 
     @Autowired
-    public UrlServiceImpl(UrlRepository urlRepository) {
+    public UrlShortenerServiceImpl(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
     }
 
     @Override
     @Transactional
     public Url createShortUrl(String originalUrl) {
-        if (!UrlValidator.isValidUrl(originalUrl)) throw new IllegalArgumentException("La URL no es válida");
+        if (!UrlValidator.isValidUrl(originalUrl)) throw new InvalidUrlException("La URL no es válida");
+        if (urlRepository.existsByUrl(originalUrl)) throw new UrlAlreadyExistsException("La URL ya existe");
         String shortUrl = UrlShortener.generateShortUrl();
         Url url = new Url();
         url.setUrl(originalUrl);
