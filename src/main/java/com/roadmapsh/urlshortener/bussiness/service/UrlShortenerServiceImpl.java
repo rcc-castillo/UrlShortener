@@ -2,6 +2,7 @@ package com.roadmapsh.urlshortener.bussiness.service;
 
 import com.roadmapsh.urlshortener.common.dto.UrlStatsDTO;
 import com.roadmapsh.urlshortener.common.exceptions.InvalidUrlException;
+import com.roadmapsh.urlshortener.common.exceptions.ShortCodeNotFoundException;
 import com.roadmapsh.urlshortener.common.exceptions.UrlAlreadyExistsException;
 import com.roadmapsh.urlshortener.common.utils.UrlShortener;
 import com.roadmapsh.urlshortener.common.utils.UrlValidator;
@@ -39,10 +40,10 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Url> getOriginalUrl(String shortUrl) {
         Optional<Url> url = urlRepository.findByShortCode(shortUrl);
-        if (url.isEmpty()) throw new IllegalArgumentException("URL no encontrada");
+        if (url.isEmpty()) throw new ShortCodeNotFoundException("ShortCode no encontrado");
         Url existingUrl = url.get();
         existingUrl.setAccessCount(existingUrl.getAccessCount() + 1);
         urlRepository.save(existingUrl);
@@ -52,9 +53,9 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     @Override
     @Transactional
     public Url updateShortUrl(String shortUrl, String newUrl) {
-        if (!UrlValidator.isValidUrl(newUrl)) throw new IllegalArgumentException("La URL no es válida");
+        if (!UrlValidator.isValidUrl(newUrl)) throw new InvalidUrlException("La URL no es válida");
         Optional<Url> url = urlRepository.findByShortCode(shortUrl);
-        if (url.isEmpty()) throw new IllegalArgumentException("URL no encontrada");
+        if (url.isEmpty()) throw new ShortCodeNotFoundException("ShortCode no encontrado");
 
         Url existingUrl = url.get();
         existingUrl.setUrl(newUrl);
@@ -67,7 +68,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     @Transactional
     public void deleteUrl(String shortUrl) {
         Optional<Url> url = urlRepository.findByShortCode(shortUrl);
-        if (url.isEmpty()) throw new IllegalArgumentException("URL no encontrada");
+        if (url.isEmpty()) throw new ShortCodeNotFoundException("ShortCode no encontrado");
         urlRepository.delete(url.get());
     }
 
@@ -75,7 +76,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     @Transactional(readOnly = true)
     public Optional<UrlStatsDTO> getUrlStats(String shortUrl) {
         Optional<Url> url = urlRepository.findByShortCode(shortUrl);
-        if (url.isEmpty()) throw new IllegalArgumentException("URL no encontrada");
+        if (url.isEmpty()) throw new ShortCodeNotFoundException("ShortCode no encontrado");
         Url existingUrl = url.get();
         UrlStatsDTO urlStatsDTO = new UrlStatsDTO(
                 existingUrl.getId(),
