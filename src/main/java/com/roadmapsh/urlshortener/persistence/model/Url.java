@@ -1,7 +1,6 @@
 package com.roadmapsh.urlshortener.persistence.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +21,6 @@ public class Url {
     private Long id;
 
     @Column(nullable = false)
-    //@Pattern(regexp = "^(https?)://[^\\s/$.?#].[^\\s]*$",message = "URL must be valid and start with http or https.")
     private String url;
 
     @Column(unique = true, nullable = false)
